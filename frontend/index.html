@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Golden Carriere Donuts</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <h1>Golden Carriere Donuts</h1>
+    <div id="donut-list"></div>
+
+    <script>
+        axios.get('/donuts')
+            .then(response => {
+                const donuts = response.data;
+                const donutList = document.getElementById('donut-list');
+                donuts.forEach(donut => {
+                    const donutElement = document.createElement('div');
+                    donutElement.textContent = `${donut.name} - $${donut.price} (${donut.calories} calories)`;
+                    donutList.appendChild(donutElement);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching donuts:', error);
+                const donutList = document.getElementById('donut-list');
+                const errorElement = document.createElement('div');
+                errorElement.textContent = 'Error loading donut data. Please try again later.';
+                donutList.appendChild(errorElement);
+            });
+    </script>
+</body>
+</html>
