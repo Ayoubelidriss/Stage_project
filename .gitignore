@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environnement virtuel
+env/
+venv/
+.env
+
+# Données & modèles
+donut/model
+data/
+*.pt
+*.bin
+*.ckpt
+
+# Logs
+*.log
+
+# VS Code / IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Database
+*.sqlite3
+*.db
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Frontend
+node_modules/
+.next/
+dist/
+build/
