@@ -1,0 +1,8 @@
+# requirements.txt — VS Code (inférence uniquement)
+# pip install -r requirements.txt
+
+transformers>=4.37.0
+torch>=2.1.0
+torchvision>=0.16.0
+Pillow>=10.0.0
+sentencepiece>=0.1.99
