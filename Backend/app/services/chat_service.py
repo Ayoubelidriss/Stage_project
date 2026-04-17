@@ -16,7 +16,7 @@ class ChatService:
         """
         1. Génère le SQL via RAG
         2. Exécute la requête
-        3. Formule une réponse en français via OpenAI (ou règle simple)
+        3. Formule une réponse en français via Grok (ou règle simple)
         """
         rag_result = self.rag.query(question)
         sql = rag_result["sql_query"]
@@ -49,7 +49,7 @@ class ChatService:
                 data_summary = str(data[:10])  # max 10 lignes pour le contexte
 
                 response = client.chat.completions.create(
-                    model="gpt-3.5-turbo",
+                    model="grok-beta",
                     messages=[
                         {
                             "role": "system",
@@ -72,14 +72,15 @@ class ChatService:
                     max_tokens=300,
                 )
                 return response.choices[0].message.content.strip()
-            except Exception:
-                pass
+            except Exception as e:
+                print(f"Error calling Grok: {e}")
+                return self._simple_answer(question, data)
 
         # Fallback : réponse simple basée sur les données
         return self._simple_answer(question, data)
 
     def _simple_answer(self, question: str, data: list) -> str:
-        """Réponse simple sans OpenAI."""
+        """Réponse simple sans Grok."""
         if not data:
             return "Aucune donnée trouvée."
 

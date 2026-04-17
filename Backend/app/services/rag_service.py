@@ -37,7 +37,9 @@ class RAGService:
 
     def generate_sql(self, question: str) -> str:
         """Utilise Grok pour transformer une question en SQL."""
+        # Use fallback if key is not found
         if not GROK_API_KEY:
+            print("Warning: GROK_API_KEY is not set.")
             return self._fallback_sql(question)
 
         try:
