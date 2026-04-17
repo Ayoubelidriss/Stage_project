@@ -4,7 +4,7 @@ en utilisant RAG (Retrieval Augmented Generation).
 """
 from sqlalchemy.orm import Session
 from app.services.rag_service import RAGService
-from app.config import OPENAI_API_KEY
+from app.config import GROK_API_KEY
 
 
 class ChatService:
@@ -39,11 +39,11 @@ class ChatService:
         if data and "error" in data[0]:
             return f"Erreur lors de l'exécution de la requête : {data[0]['error']}"
 
-        # Essayer avec OpenAI
-        if OPENAI_API_KEY:
+        # Essayer avec Grok
+        if GROK_API_KEY:
             try:
                 from openai import OpenAI
-                client = OpenAI(api_key=OPENAI_API_KEY)
+                client = OpenAI(api_key=GROK_API_KEY, base_url="https://api.x.ai/v1")
 
                 # Préparer un résumé des données
                 data_summary = str(data[:10])  # max 10 lignes pour le contexte

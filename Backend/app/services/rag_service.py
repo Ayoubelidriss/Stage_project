@@ -5,8 +5,7 @@ et retourne les résultats depuis la base de données.
 import os
 from sqlalchemy.orm import Session
 from sqlalchemy import text
-from app.config import OPENAI_API_KEY
-
+from app.config import GROK_API_KEY
 # Schéma de la base transmis au modèle comme contexte
 DB_SCHEMA = """
 Tables disponibles dans la base golden_carriere_db :
@@ -37,16 +36,16 @@ class RAGService:
         self.db = db
 
     def generate_sql(self, question: str) -> str:
-        """Utilise OpenAI pour transformer une question en SQL."""
-        if not OPENAI_API_KEY:
+        """Utilise Grok pour transformer une question en SQL."""
+        if not GROK_API_KEY:
             return self._fallback_sql(question)
 
         try:
             from openai import OpenAI
-            client = OpenAI(api_key=OPENAI_API_KEY)
+            client = OpenAI(api_key=GROK_API_KEY, base_url="https://api.x.ai/v1")
 
             response = client.chat.completions.create(
-                model="gpt-3.5-turbo",
+                model="grok-beta",
                 messages=[
                     {
                         "role": "system",
