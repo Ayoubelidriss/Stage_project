@@ -1,0 +1,118 @@
+15:52:04  INFO      ======================================================================
+15:52:04  INFO        DÉMARRAGE DE L'IMPORT  –  2026-04-20 15:52:04
+15:52:04  INFO      ======================================================================
+15:52:04  INFO      📂  Lecture du fichier 'data/dataset_golden_carriere.xlsx', feuille 'TOUTES_DONNEES' …
+15:52:12  INFO        ✔  44731 lignes chargées depuis Excel.
+15:52:12  INFO      🔌  Connexion à PostgreSQL (localhost:5432/golden_carriere_db) …
+15:52:12  INFO        ✔  Connecté.
+15:52:12  INFO      ⚙   Traitement de 44731 lignes (batch=500) …
+15:52:13  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:13  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:13  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:14  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:14  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:14  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:15  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:15  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:15  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:15  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:16  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:16  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:17  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:17  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:18  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:18  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:19  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:19  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:20  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:20  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:21  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:22  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:22  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:23  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:23  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:24  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:25  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:25  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:26  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:27  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:28  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:28  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:29  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:30  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:31  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:32  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:33  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:34  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:35  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:36  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:37  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:38  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:39  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:40  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:41  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:42  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:44  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:45  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:46  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:47  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:48  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:49  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:51  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:52  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:54  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:55  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:57  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:58  INFO        ✔  Batch de 500 livraisons inséré.
+15:52:59  INFO        ✔  Batch de 500 livraisons inséré.
+15:53:01  INFO        ✔  Batch de 500 livraisons inséré.
+15:53:02  INFO        ✔  Batch de 500 livraisons inséré.
+15:53:03  INFO        ✔  Batch de 500 livraisons inséré.
+15:53:05  INFO        ✔  Batch de 500 livraisons inséré.
+15:53:06  INFO        ✔  Batch de 500 livraisons inséré.
+15:53:08  INFO        ✔  Batch de 500 livraisons inséré.
+15:53:09  INFO        ✔  Batch de 500 livraisons inséré.
+15:53:11  INFO        ✔  Batch de 500 livraisons inséré.
+15:53:12  INFO        ✔  Batch de 500 livraisons inséré.
+15:53:14  INFO        ✔  Batch de 500 livraisons inséré.
+15:53:15  INFO        ✔  Batch de 500 livraisons inséré.
+15:53:17  INFO        ✔  Batch de 500 livraisons inséré.
+15:53:19  INFO        ✔  Batch de 500 livraisons inséré.
+15:53:20  INFO        ✔  Batch de 500 livraisons inséré.
+15:53:22  INFO        ✔  Batch de 500 livraisons inséré.
+15:53:24  INFO        ✔  Batch de 500 livraisons inséré.
+15:53:25  INFO        ✔  Batch de 500 livraisons inséré.
+15:53:27  INFO        ✔  Batch de 500 livraisons inséré.
+15:53:29  INFO        ✔  Batch de 500 livraisons inséré.
+15:53:30  INFO        ✔  Batch de 500 livraisons inséré.
+15:53:32  INFO        ✔  Batch de 500 livraisons inséré.
+15:53:34  INFO        ✔  Batch de 500 livraisons inséré.
+15:53:36  INFO        ✔  Batch de 500 livraisons inséré.
+15:53:38  INFO        ✔  Batch de 500 livraisons inséré.
+15:53:40  INFO        ✔  Batch de 500 livraisons inséré.
+15:53:42  INFO        ✔  Batch de 500 livraisons inséré.
+15:53:44  INFO        ✔  Batch de 500 livraisons inséré.
+15:53:46  INFO        ✔  Batch de 500 livraisons inséré.
+15:53:48  INFO        ✔  Batch de 500 livraisons inséré.
+15:53:50  INFO        ✔  Batch de 500 livraisons inséré.
+15:53:51  INFO        ✔  Batch de 231 livraisons inséré.
+15:53:51  INFO      
+15:53:51  INFO      ======================================================================
+15:53:51  INFO        RÉSUMÉ DE L'IMPORT
+15:53:51  INFO      ======================================================================
+15:53:51  INFO        Lignes Excel lues         : 44731
+15:53:51  INFO        ─────────────────────────────────────
+15:53:51  INFO        Clients  créés            : 15
+15:53:51  INFO        Produits créés            : 10
+15:53:51  INFO        Chauffeurs créés          : 15
+15:53:51  INFO        Carrières créées          : 10
+15:53:51  INFO        Chantiers créés           : 40
+15:53:51  INFO        Entrées dim_temps créées  : 1826
+15:53:51  INFO        ─────────────────────────────────────
+15:53:51  INFO        Livraisons insérées       : 44731 ✔
+15:53:51  INFO        Livraisons doublons       : 0 ⏭
+15:53:51  INFO        Livraisons en erreur      : 0 ✗
+15:53:51  INFO        ─────────────────────────────────────
+15:53:51  INFO        Durée totale              : 107.66 secondes
+15:53:51  INFO      ======================================================================
+15:53:51  INFO        🎉  Import terminé sans erreur !

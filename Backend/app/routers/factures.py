@@ -1,6 +1,7 @@
 import os
 import json
 import shutil
+from datetime import date as date_type
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlalchemy.orm import Session
 from typing import List
@@ -84,8 +85,8 @@ async def upload_facture(file: UploadFile = File(...), db: Session = Depends(get
             db.refresh(client)
         client_id = client.client_id
 
-    # Créer la facture
-    numero = extracted.get("numero_facture", f"IMPORT-{file.filename}")
+    # Créer la facture — fallback si numero_facture est None ou absent
+    numero = extracted.get("numero_facture") or f"IMPORT-{file.filename}"
     existing = db.query(Facture).filter(Facture.numero == numero).first()
     if existing:
         return {
@@ -97,6 +98,7 @@ async def upload_facture(file: UploadFile = File(...), db: Session = Depends(get
 
     facture = Facture(
         numero=numero,
+        date_facture=_to_date(extracted.get("date_facture")),
         client_id=client_id,
         image_path=file_path,
         extracted_data=json.dumps(extracted, ensure_ascii=False),
@@ -123,3 +125,16 @@ def _to_float(value):
         return float(str(value).replace(",", ".").replace(" ", ""))
     except (ValueError, TypeError):
         return None
+
+
+def _to_date(value):
+    """Convertit une chaîne de date (DD/MM/YYYY ou YYYY-MM-DD) en objet date Python."""
+    if not value:
+        return None
+    from datetime import datetime
+    for fmt in ("%d/%m/%Y", "%Y-%m-%d", "%d-%m-%Y", "%Y/%m/%d"):
+        try:
+            return datetime.strptime(str(value).strip(), fmt).date()
+        except ValueError:
+            continue
+    return None

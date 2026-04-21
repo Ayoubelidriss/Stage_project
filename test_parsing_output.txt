@@ -1,0 +1,9 @@
+=== Séquence nettoyée ===
+Traceback (most recent call last):
+  File "c:\Users\asfou\Stage_project\test_parsing.py", line 14, in <module>
+    print(seq_propre)
+    ~~~~~^^^^^^^^^^^^
+  File "C:\Users\asfou\miniconda3\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode characters in position 98-101: character maps to <undefined>
