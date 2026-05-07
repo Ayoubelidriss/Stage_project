@@ -116,3 +116,31 @@
 15:53:51  INFO        Durée totale              : 107.66 secondes
 15:53:51  INFO      ======================================================================
 15:53:51  INFO        🎉  Import terminé sans erreur !
+13:39:26  INFO      ======================================================================
+13:39:26  INFO        DEMARRAGE DE L'IMPORT  --  2026-05-07 13:39:26
+13:39:26  INFO      ======================================================================
+13:39:26  INFO      [LECTURE] Fichier 'data/dataset_golden_carriere.xlsx', feuille 'TOUTES_DONNEES' ...
+13:39:41  INFO        [OK] 44731 lignes chargees depuis Excel.
+13:39:41  INFO      [DB] Connexion a PostgreSQL (localhost:5432/golden_carriere_db) ...
+13:39:41  INFO        [OK] Connecte.
+13:39:41  INFO      [IMPORT] Traitement de 44731 lignes (batch=500) ...
+13:42:54  INFO      
+13:42:54  INFO      ======================================================================
+13:42:54  INFO        RESUME DE L'IMPORT
+13:42:54  INFO      ======================================================================
+13:42:54  INFO        Lignes Excel lues         : 44731
+13:42:54  INFO        -------------------------------------
+13:42:54  INFO        Clients  traites          : 15
+13:42:54  INFO        Produits traites          : 10
+13:42:54  INFO        Chauffeurs traites        : 15
+13:42:54  INFO        Carrieres traitees        : 10
+13:42:54  INFO        Chantiers traites         : 40
+13:42:54  INFO        Entrees dim_temps         : 1826
+13:42:54  INFO        -------------------------------------
+13:42:54  INFO        Livraisons inserees [OK]  : 0
+13:42:54  INFO        Livraisons doublons [>>]  : 44731
+13:42:54  INFO        Livraisons en erreur [!!] : 0
+13:42:54  INFO        -------------------------------------
+13:42:54  INFO        Duree totale              : 207.31 secondes
+13:42:54  INFO      ======================================================================
+13:42:54  INFO        Import termine sans erreur !

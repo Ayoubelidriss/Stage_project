@@ -210,6 +210,7 @@ class OCRService:
     _processor = None
     _model     = None
     _device    = None
+    _load_error = None
 
     def __init__(self, model_path: str | None = None):
         self.model_path = model_path or MODEL_PATH
@@ -233,6 +234,7 @@ class OCRService:
         if not ok:
             log.error("[OCRService] %s", msg)
             print(f"[OCRService] ERREUR : {msg}", file=sys.stderr)
+            OCRService._load_error = msg
             return False
 
         try:
@@ -261,6 +263,7 @@ class OCRService:
         except Exception as exc:
             log.error("[OCRService] Erreur chargement modele : %s", exc)
             print(f"[OCRService] Erreur chargement modele : {exc}", file=sys.stderr)
+            OCRService._load_error = str(exc)
             return False
 
     def extract(self, image_path: str) -> dict:
@@ -273,8 +276,9 @@ class OCRService:
 
         if not self._load_model():
             ok, msg = self._verify_model_files()
+            load_msg = OCRService._load_error or msg
             return {
-                "error": f"Modele Donut non disponible : {msg}",
+                "error": f"Modele Donut non disponible : {load_msg}",
                 "model_path": self.model_path,
                 "required_files": REQUIRED_FILES,
                 "numero_facture": None, "date_facture": None,

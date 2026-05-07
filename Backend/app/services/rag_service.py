@@ -7,7 +7,7 @@ import re
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
-from app.config import GROK_API_KEY
+from app.config import GROQ_API_KEY, GROQ_BASE_URL, GROQ_MODEL
 
 
 DB_SCHEMA = """
@@ -71,17 +71,17 @@ class RAGService:
 
     def generate_sql(self, question: str) -> str:
         """Use the LLM to transform a French question into SQL."""
-        if not GROK_API_KEY:
+        if not GROQ_API_KEY:
             raise RuntimeError(
-                "GROK_API_KEY n'est pas configuree. Le chatbot doit utiliser le LLM."
+                "GROQ_API_KEY n'est pas configuree. Le chatbot doit utiliser Groq Cloud."
             )
 
         try:
             from openai import OpenAI
 
-            client = OpenAI(api_key=GROK_API_KEY, base_url="https://api.x.ai/v1")
+            client = OpenAI(api_key=GROQ_API_KEY, base_url=GROQ_BASE_URL)
             response = client.chat.completions.create(
-                model="grok-beta",
+                model=GROQ_MODEL,
                 messages=[
                     {
                         "role": "system",

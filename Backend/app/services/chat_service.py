@@ -6,7 +6,7 @@ import json
 
 from sqlalchemy.orm import Session
 
-from app.config import GROK_API_KEY
+from app.config import GROQ_API_KEY, GROQ_BASE_URL, GROQ_MODEL
 from app.services.rag_service import RAGService
 
 
@@ -54,20 +54,20 @@ class ChatService:
         if data and "error" in data[0]:
             return f"Erreur lors de l'execution de la requete : {data[0]['error']}"
 
-        if not GROK_API_KEY:
+        if not GROQ_API_KEY:
             return (
-                "Impossible de generer une reponse : GROK_API_KEY n'est pas configuree. "
-                "Le chatbot est configure pour utiliser uniquement le LLM."
+                "Impossible de generer une reponse : GROQ_API_KEY n'est pas configuree. "
+                "Le chatbot est configure pour utiliser Groq Cloud."
             )
 
         try:
             from openai import OpenAI
 
-            client = OpenAI(api_key=GROK_API_KEY, base_url="https://api.x.ai/v1")
+            client = OpenAI(api_key=GROQ_API_KEY, base_url=GROQ_BASE_URL)
             data_summary = json.dumps(data[:20], ensure_ascii=False, default=str, indent=2)
 
             response = client.chat.completions.create(
-                model="grok-beta",
+                model=GROQ_MODEL,
                 messages=[
                     {
                         "role": "system",
