@@ -14,6 +14,8 @@ DATABASE_URL: str = os.getenv(
     "postgresql+pg8000://postgres:password@localhost:5432/golden_carriere_db",
 )
 
+READONLY_DATABASE_URL: str = os.getenv("READONLY_DATABASE_URL", DATABASE_URL)
+
 # ── Sécurité ───────────────────────────────────────────────────────────────
 SECRET_KEY: str = os.getenv(
     "SECRET_KEY",

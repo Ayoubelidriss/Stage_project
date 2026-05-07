@@ -1,12 +1,15 @@
 """
-RAG Service — Génère du SQL à partir d'une question en langage naturel
-et retourne les résultats depuis la base de données.
+RAG service: turns a French business question into safe read-only SQL,
+then returns the database result.
 """
-import os
-from sqlalchemy.orm import Session
+import re
+
 from sqlalchemy import text
+from sqlalchemy.orm import Session
+
 from app.config import GROK_API_KEY
-# Schéma de la base transmis au modèle comme contexte
+
+
 DB_SCHEMA = """
 Tables disponibles dans la base golden_carriere_db :
 
@@ -22,13 +25,44 @@ Tables disponibles dans la base golden_carriere_db :
 8. factures(facture_id, numero, date_facture, client_id, chantier_id, total_ht,
             tva, total_ttc, statut, image_path, extracted_data)
 
-Règles :
-- Toujours écrire du SQL PostgreSQL valide.
-- Retourner UNIQUEMENT la requête SQL, sans explication.
-- Limiter les résultats à 50 lignes avec LIMIT 50 si nécessaire.
-- Les montants sont en MAD (dirhams marocains).
-- Les quantités sont en tonnes.
+Regles obligatoires :
+- Toujours ecrire du SQL PostgreSQL valide.
+- Retourner uniquement la requete SQL, sans explication ni markdown.
+- Produire uniquement une requete de lecture : SELECT ou WITH ... SELECT.
+- Ne jamais utiliser INSERT, UPDATE, DELETE, DROP, ALTER, CREATE, TRUNCATE.
+- Ajouter LIMIT 50 sauf si la requete retourne deja une seule ligne agregee.
+- Utiliser CURRENT_DATE pour les periodes relatives : aujourd'hui, ce mois, cette annee.
+- Si l'utilisateur parle de ventes sans precision, retourner le chiffre d'affaires TTC
+  avec SUM(fait_livraison.montant_ttc), et si utile le nombre de livraisons.
+- Les montants sont en MAD.
+- Les quantites sont en tonnes.
+- Utiliser des alias clairs pour aider la generation de la reponse finale.
 """
+
+
+FORBIDDEN_SQL_KEYWORDS = (
+    "insert",
+    "update",
+    "delete",
+    "drop",
+    "alter",
+    "create",
+    "truncate",
+    "merge",
+    "grant",
+    "revoke",
+    "copy",
+    "call",
+    "execute",
+    "do",
+    "vacuum",
+    "analyze",
+    "refresh",
+    "listen",
+    "notify",
+    "set",
+    "reset",
+)
 
 
 class RAGService:
@@ -36,25 +70,24 @@ class RAGService:
         self.db = db
 
     def generate_sql(self, question: str) -> str:
-        """Utilise Grok pour transformer une question en SQL."""
-        # Use fallback if key is not found
+        """Use the LLM to transform a French question into SQL."""
         if not GROK_API_KEY:
-            print("Warning: GROK_API_KEY is not set.")
-            return self._fallback_sql(question)
+            raise RuntimeError(
+                "GROK_API_KEY n'est pas configuree. Le chatbot doit utiliser le LLM."
+            )
 
         try:
             from openai import OpenAI
-            client = OpenAI(api_key=GROK_API_KEY, base_url="https://api.x.ai/v1")
 
+            client = OpenAI(api_key=GROK_API_KEY, base_url="https://api.x.ai/v1")
             response = client.chat.completions.create(
                 model="grok-beta",
                 messages=[
                     {
                         "role": "system",
                         "content": (
-                            "Tu es un expert SQL PostgreSQL. "
-                            "On te donne le schéma d'une base de données d'une carrière de matériaux. "
-                            "Réponds UNIQUEMENT avec la requête SQL, sans aucun texte ni markdown.\n\n"
+                            "Tu es un expert SQL PostgreSQL pour une application de gestion "
+                            "d'une carriere de materiaux. Tu dois repondre uniquement par SQL.\n\n"
                             + DB_SCHEMA
                         ),
                     },
@@ -63,60 +96,58 @@ class RAGService:
                 temperature=0,
                 max_tokens=500,
             )
-            sql = response.choices[0].message.content.strip()
-            # Nettoyer les balises markdown si présentes
-            sql = sql.replace("```sql", "").replace("```", "").strip()
-            return sql
-        except Exception as e:
-            return self._fallback_sql(question)
+            return self._clean_sql(response.choices[0].message.content.strip())
+        except Exception as exc:
+            raise RuntimeError(f"Erreur pendant la generation SQL par LLM : {exc}")
 
-    def _fallback_sql(self, question: str) -> str:
-        """SQL par défaut si OpenAI n'est pas disponible."""
-        q = question.lower()
-        if "chantier" in q and ("plus" in q or "max" in q or "consomm" in q):
-            return (
-                "SELECT c.nom AS chantier, SUM(fl.quantite) AS quantite_totale "
-                "FROM fait_livraison fl "
-                "JOIN dim_chantier c ON c.chantier_id = fl.chantier_id "
-                "GROUP BY c.nom ORDER BY quantite_totale DESC LIMIT 10"
-            )
-        if "client" in q and ("plus" in q or "max" in q or "chiffre" in q):
-            return (
-                "SELECT cl.nom AS client, SUM(fl.montant_ttc) AS ca_ttc "
-                "FROM fait_livraison fl "
-                "JOIN dim_client cl ON cl.client_id = fl.client_id "
-                "GROUP BY cl.nom ORDER BY ca_ttc DESC LIMIT 10"
-            )
-        if "produit" in q or "materiau" in q or "gravette" in q or "concasse" in q:
-            return (
-                "SELECT p.nom AS produit, SUM(fl.quantite) AS quantite_totale "
-                "FROM fait_livraison fl "
-                "JOIN dim_produit p ON p.produit_id = fl.produit_id "
-                "GROUP BY p.nom ORDER BY quantite_totale DESC LIMIT 10"
-            )
-        if "facture" in q:
-            return "SELECT * FROM factures ORDER BY facture_id DESC LIMIT 20"
-        # Requête générique
-        return (
-            "SELECT cl.nom AS client, p.nom AS produit, fl.quantite, fl.montant_ttc "
-            "FROM fait_livraison fl "
-            "LEFT JOIN dim_client cl ON cl.client_id = fl.client_id "
-            "LEFT JOIN dim_produit p ON p.produit_id = fl.produit_id "
-            "ORDER BY fl.livraison_id DESC LIMIT 20"
-        )
+    def _clean_sql(self, sql: str) -> str:
+        """Remove markdown fences and a trailing semicolon from the LLM output."""
+        cleaned = sql.replace("```sql", "").replace("```", "").strip()
+        return cleaned.rstrip(";").strip()
+
+    def validate_readonly_sql(self, sql: str) -> None:
+        """Reject anything that is not a single read-only query."""
+        normalized = sql.strip()
+        lowered = normalized.lower()
+
+        if not normalized:
+            raise ValueError("La requete SQL generee est vide.")
+
+        if not (lowered.startswith("select") or lowered.startswith("with")):
+            raise ValueError("Seules les requetes SELECT ou WITH sont autorisees.")
+
+        if ";" in normalized:
+            raise ValueError("Une seule requete SQL est autorisee.")
+
+        if "--" in normalized or "/*" in normalized or "*/" in normalized:
+            raise ValueError("Les commentaires SQL sont interdits.")
+
+        forbidden_pattern = r"\b(" + "|".join(FORBIDDEN_SQL_KEYWORDS) + r")\b"
+        match = re.search(forbidden_pattern, lowered)
+        if match:
+            raise ValueError(f"Mot-cle SQL interdit detecte : {match.group(1).upper()}.")
+
+    def _ensure_limit(self, sql: str) -> str:
+        """Cap result size when the LLM forgets a LIMIT clause."""
+        if re.search(r"\blimit\s+\d+\b", sql, flags=re.IGNORECASE):
+            return sql
+        return f"SELECT * FROM ({sql}) AS llm_result LIMIT 50"
 
     def execute_sql(self, sql: str) -> list:
-        """Exécute le SQL généré et retourne les résultats."""
+        """Execute the validated SQL and return rows as dictionaries."""
         try:
             result = self.db.execute(text(sql))
             columns = list(result.keys())
             rows = result.fetchall()
             return [dict(zip(columns, row)) for row in rows]
-        except Exception as e:
-            return [{"error": str(e), "sql": sql}]
+        except Exception as exc:
+            return [{"error": str(exc), "sql": sql}]
 
     def query(self, question: str) -> dict:
         sql = self.generate_sql(question)
+        self.validate_readonly_sql(sql)
+        sql = self._ensure_limit(sql)
+        self.validate_readonly_sql(sql)
         data = self.execute_sql(sql)
         return {
             "question": question,
